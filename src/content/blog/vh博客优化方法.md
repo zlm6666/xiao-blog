@@ -9,7 +9,7 @@ tags:
   - 博客
 id: vhastro-blog-youhua
 date: 2025-12-31 19:50:39
-cover: "http://img.magicalapp.cn/api/image/show/80c06e41cb17e244e786487b31f35001"
+cover: "http://img.tucang.cc/api/image/show/80c06e41cb17e244e786487b31f35001"
 recommend: true
 ---
 ## 前言&目录
@@ -26,7 +26,7 @@ recommend: true
 
 当我们做了外链之后，有时会需要跟朋友博客互换rss订阅地址，达到互相可以在“对面的博客看到自己的帖子”这种效果，
 
-![圈子功能预览](http://img.magicalapp.cn/api/image/show/950518f98fc73f00d36a6ced3970fc14)
+![圈子功能预览](http://img.tucang.cc/api/image/show/950518f98fc73f00d36a6ced3970fc14)
 
 当然如果你不嫌麻烦的话，可以手动在`/src/page_data/Friends.ts`这个目录下按照里面的格式手动添加（~~应该没人会这样吧~~）
 
@@ -212,7 +212,7 @@ function cleanText(text) {
 小声蛐蛐：如果失效可以发邮件给远梦大佬反馈
 :::
 
-预览效果：![动态功能预览效果](http://img.magicalapp.cn/api/image/show/2bd2ff62144b82d6ccf0279084ed7bf0)
+预览效果：![动态功能预览效果](http://img.tucang.cc/api/image/show/2bd2ff62144b82d6ccf0279084ed7bf0)
 
 也是花了点时间做好了em对照表
 
