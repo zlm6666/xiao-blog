@@ -2,4 +2,36 @@
 import "./Comment.less";
 ---
 
-<section class="vh-comment"><section><section class="vh-space-loading"><span></span><span></span><span></span></section></section></section>
+<section class="vh-comment">
+  <section>
+    <section class="vh-space-loading">
+      <span></span>
+      <span></span>
+      <span></span>
+    </section>
+  </section>
+</section>
+
+<!-- ✅ 修复 #锚点无法直接定位评论的问题 -->
+<script is:inline>
+  (function () {
+    const id = location.hash?.replace('#', '')
+    if (!id) return
+
+    let tries = 0
+    const maxTries = 50
+
+    const timer = setInterval(() => {
+      const el = document.getElementById(id)
+      if (el || ++tries > maxTries) {
+        clearInterval(timer)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          el.style.outline = '2px solid rgba(80,120,255,.55)'
+          el.style.outlineOffset = '6px'
+          setTimeout(() => (el.style.outline = ''), 1500)
+        }
+      }
+    }, 200)
+  })()
+</script>
