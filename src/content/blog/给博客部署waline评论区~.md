@@ -9,7 +9,7 @@ tags:
 id: waline-deploy-course
 date: 2025-12-21 10:09:46
 updated: 2026-01-16 7:20:42
-cover: "http://img.magicalapp.cn/api/image/show/ce083b1ce217a8f707aaf33a1851364b"
+cover: "http://img.tucang.cc/api/image/show/ce083b1ce217a8f707aaf33a1851364b"
 recommend: true
 ---
 ## 前言
@@ -76,11 +76,11 @@ vercel会为你创建一个GitHub仓库
 
 1. 点击顶部的`Storage`进入存储服务配置页，选择`Create Database`创建数据库。`Marketplace Database Providers`数据库服务选择`Neon`，点击`Continue`进行下一步。（按图点击）
 
-![创建数据库](http://img.magicalapp.cn/api/image/show/ba2952b6b6f4469765210c0a813ccf62)
+![创建数据库](http://img.tucang.cc/api/image/show/ba2952b6b6f4469765210c0a813ccf62)
 
 2. 此时会让你创建一个`Neno`账号，此时选择 `Accept and Create`接受并创建。后续选择数据库的套餐配置，包括地区和额度（默认免费套餐，USA 东部地区）。这里可以什么都不操作直接选择`Continue`下一步。
 
-![创建账号](http://img.magicalapp.cn/api/image/show/5006a3e61b58da2ecc50896afa8afb7b)
+![创建账号](http://img.tucang.cc/api/image/show/5006a3e61b58da2ecc50896afa8afb7b)
 
 3. 然后取一个你喜欢的名称，下一步
 
@@ -156,13 +156,13 @@ CREATE TABLE wl_users (
 ) ;
 ```
 
-![open in neon](http://img.magicalapp.cn/api/image/show/231230d09092e5fe40276f8d37ad3f0a)
+![open in neon](http://img.tucang.cc/api/image/show/231230d09092e5fe40276f8d37ad3f0a)
 
-![粘贴代码](http://img.magicalapp.cn/api/image/show/8aacd69cb34f5b1984fdfd43e90da275)
+![粘贴代码](http://img.tucang.cc/api/image/show/8aacd69cb34f5b1984fdfd43e90da275)
 
 5. 稍等片刻之后会告知你创建成功。然后回到vercel，更新部署，让配置生效（点击顶部的 `Deployments` 点击顶部最新的一次部署右侧的 `Redeploy` 按钮进行重新部署，就完成了。）
 
-![更新部署](http://img.magicalapp.cn/api/image/show/cd7cf3b3a07cf7fd32b27f4448974a46)
+![更新部署](http://img.tucang.cc/api/image/show/cd7cf3b3a07cf7fd32b27f4448974a46)
 
 等待部署完成就好了~
 
