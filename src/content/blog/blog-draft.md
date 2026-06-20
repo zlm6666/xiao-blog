@@ -72,7 +72,7 @@ recommend: true
 
 ### RSS 聚合
 
-[RSS 配置页面](https://img.tucang.cc/api/image/show/e4d0ed68e7f4c3d19551194409b9fbc3)
+![RSS 配置页面](https://img.tucang.cc/api/image/show/e4d0ed68e7f4c3d19551194409b9fbc3)
 
 系统会自动抓取所有已通过友链的 RSS 更新，聚合生成一个统一的 RSS 源。你可以把它挂在博客展示"圈子"。配合 cron-job.org 每 4 小时自动更新一次。
 
