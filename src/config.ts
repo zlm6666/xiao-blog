@@ -16,7 +16,7 @@ export default {
   // Cover 网站缩略图
   Cover: '/assets/images/banner/072c12ec85d2d3b5.webp',
   // 网站侧边栏公告 (不填写即不开启)
-  Tips: '<p>欢迎光临我的博客 🎉</p><p>这里会分享我的日常和学习中的收集、整理及总结，希望能对你有所帮助:) 💖</p>',
+  Tips: '<p>欢迎光临我的博客 🎉</p><p>这里会分享我的日常和学习中的收集、整理及总结，希望能对你有所帮助:) 💖</p><img src="https://api.mmp.cc/api/ipinfo" alt="访客信息" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;margin-top:12px;">',
   // 首页打字机文案列表
   TypeWriteList: [
     '笑为光，照岁痕，见未改心',
