@@ -1,3 +1,4 @@
+</html>
 ---
 const { title, keywords, description, pagecover, activeNav, Home } = Astro.props;
 // 网站配置
@@ -27,36 +28,79 @@ import "./Layout.less";
 ---
 
 <html lang="zh-CN">
-	<Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
-		<!-- 谷歌广告JS加载项 -->
-		{ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}
-		<!-- 彩旗🎈 -->
-		<script is:inline src="/assets/js/vhCaiqi.js" defer></script>
-		<!-- 设置主题颜色 -->
-		<Fragment
-			set:html={`<style>:root {${Object.entries(Theme)
-				.map(([key, value]) => `${key}:${value};`)
-				.join("")}--vh-main-header-height:${Home ? HomeBanner.HomeHeight : HomeBanner.PageHeight};--vh-home-banner:${HomeBanner.background}}</style>`}
-		/>
-	</Head>
-	<body>
-		<MobileSidebar />
-		<Header activeNav={activeNav} />
-		<main class="main">
-			{HomeBanner.enable && <MainHeader />}
-			<section class="main-inner" style={`padding-top:${HomeBanner.enable ? "0.88rem" : "calc(66px + 0.68rem)"}`}>
-				<section class="main-inner-content">
-					<slot />
-				</section>
-				<Aside />
-			</section>
-			<BackTop />
-		</main>
-		<Footer />
-		<script>
-			import InitFn from "@/scripts/Init";
-			// 全局初始化
-			InitFn();
-		</script>
-	</body>
+  <Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
+    <!-- 谷歌广告JS加载项 -->
+    {ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}
+    <!-- 彩旗🎈 -->
+    <script is:inline src="/assets/js/vhCaiqi.js" defer></script>
+    <!-- 设置主题颜色 & Header高度变量 -->
+    <Fragment
+      set:html={`<style>:root {${Object.entries(Theme)
+        .map(([key, value]) => `${key}:${value};`)
+        .join("")}--vh-main-header-height:${Home ? HomeBanner.HomeHeight : HomeBanner.PageHeight};--vh-home-banner:${HomeBanner.background}}</style>`}
+    />
+  </Head>
+  <body>
+    <MobileSidebar />
+    <Header activeNav={activeNav} />
+    <main class="main">
+      {HomeBanner.enable && <MainHeader />}
+      <section class="main-inner" style={`padding-top:${HomeBanner.enable ? "0.88rem" : "calc(66px + 0.68rem)"}`}>
+        <section class="main-inner-content">
+          <slot />
+        </section>
+        <Aside />
+      </section>
+      <BackTop />
+    </main>
+    <Footer />
+    <script>
+      import InitFn from "@/scripts/Init";
+      // 全局初始化
+      InitFn();
+    </script>
+
+    <!-- ✅ 锚点修复脚本：解决固定头部遮挡问题 -->
+    <script is:inline>
+      function fixAnchorScroll() {
+        const hash = window.location.hash;
+        if (!hash) return;
+
+        const target = document.querySelector(hash);
+        if (!target) return;
+
+        // 读取主题动态计算的 Header 高度（关键！）
+        const rootStyles = getComputedStyle(document.documentElement);
+        const headerHeight = parseFloat(rootStyles.getPropertyValue('--vh-main-header-height')) || 80;
+
+        const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
+
+        // 使用 requestAnimationFrame 确保浏览器已完成上一次渲染
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: targetTop - headerHeight - 12, // 12px 额外缓冲，视觉效果更好
+            behavior: 'auto' // 必须 auto，防止 Swup 动画覆盖本次滚动
+          });
+        });
+      }
+
+      // 1. 页面首次加载
+      document.addEventListener('DOMContentLoaded', () => setTimeout(fixAnchorScroll, 100));
+
+      // 2. Swup 页面切换后（你的主题核心路由方式）
+      document.addEventListener('swup:contentReplaced', fixAnchorScroll);
+      
+      // 3. Astro ViewTransitions 兼容（双保险）
+      document.addEventListener('astro:after-swap', fixAnchorScroll);
+
+      // 4. 点击页面内锚点链接时
+      document.addEventListener('click', (e) => {
+        const anchor = e.target.closest('a');
+        if (anchor && anchor.hash && anchor.origin === location.origin) {
+          // 延迟执行，等待 URL 更新和页面渲染
+          setTimeout(fixAnchorScroll, 50);
+        }
+      });
+    </script>
+  </body>
 </html>
