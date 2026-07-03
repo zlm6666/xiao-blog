@@ -1,39 +1,24 @@
-</html>
 ---
 const { title, keywords, description, pagecover, activeNav, Home } = Astro.props;
-// 网站配置
 import SITE_INFO from "@/config";
 const { GoogleAds, Theme, HomeBanner } = SITE_INFO;
 const { ad_Client, asideAD_Slot, articleAD_Slot } = GoogleAds;
-// Head 依赖
 import Head from "@/components/Head/Head.astro";
-// 顶部 Header
 import Header from "@/components/Header/Header.astro";
-// Main 区域 Header
 import MainHeader from "@/components/MainHeader/MainHeader.astro";
-// Aside组件
 import Aside from "@/components/Aside/Aside.astro";
-// 底部 Footer
 import Footer from "@/components/Footer/Footer.astro";
-// 返回顶部
 import BackTop from "@/components/BackTop/BackTop.astro";
-// 手机端侧边栏
 import MobileSidebar from "@/components/MobileSidebar/MobileSidebar.astro";
-// A Modern CSS Reset
 import "@/styles/Reset.less";
-// 全局基础样式
 import "@/styles/Base.less";
-// Layout 样式
 import "./Layout.less";
 ---
 
 <html lang="zh-CN">
   <Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
-    <!-- 谷歌广告JS加载项 -->
     {ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}
-    <!-- 彩旗🎈 -->
     <script is:inline src="/assets/js/vhCaiqi.js" defer></script>
-    <!-- 设置主题颜色 & Header高度变量 -->
     <Fragment
       set:html={`<style>:root {${Object.entries(Theme)
         .map(([key, value]) => `${key}:${value};`)
@@ -56,49 +41,58 @@ import "./Layout.less";
     <Footer />
     <script>
       import InitFn from "@/scripts/Init";
-      // 全局初始化
       InitFn();
     </script>
 
-    <!-- ✅ 锚点修复脚本：解决固定头部遮挡问题 -->
+    <!-- ✅ 终极锚点修复：支持点击跳转 + 兼容评论区 -->
     <script is:inline>
-      function fixAnchorScroll() {
+      function smartScrollToHash() {
         const hash = window.location.hash;
         if (!hash) return;
 
-        const target = document.querySelector(hash);
+        const id = hash.replace('#', '');
+        const target = document.getElementById(id);
         if (!target) return;
 
-        // 读取主题动态计算的 Header 高度（关键！）
+        // 1. 判断是否是评论区的锚点（评论区自带高亮逻辑，我们这里只负责滚动，且不干扰它的定时器）
+        // 通常评论ID会包含 'comment' 或 'reply'
+        const isComment = id.includes('comment') || id.includes('reply');
+
         const rootStyles = getComputedStyle(document.documentElement);
         const headerHeight = parseFloat(rootStyles.getPropertyValue('--vh-main-header-height')) || 80;
 
-        const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
-
-        // 使用 requestAnimationFrame 确保浏览器已完成上一次渲染
         requestAnimationFrame(() => {
-          window.scrollTo({
-            top: targetTop - headerHeight - 12, // 12px 额外缓冲，视觉效果更好
-            behavior: 'auto' // 必须 auto，防止 Swup 动画覆盖本次滚动
-          });
+          if (isComment) {
+            // 2. 如果是评论，让它居中显示（配合 Comment.astro 里的脚本）
+            // 注意：Comment.astro 里的脚本已经有 setInterval 了，这里只做一次性的平滑滚动辅助
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            // 3. 如果是普通标题，顶部对齐，扣除 Header 高度
+            const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({
+              top: targetTop - headerHeight - 12,
+              behavior: 'auto' // 站内跳转用 auto 最稳，不会被 Swup 覆盖
+            });
+          }
         });
       }
 
-      // 1. 页面首次加载
-      document.addEventListener('DOMContentLoaded', () => setTimeout(fixAnchorScroll, 100));
+      // 场景1：首次加载页面（例如直接访问 xxx.com/#标题）
+      document.addEventListener('DOMContentLoaded', () => setTimeout(smartScrollToHash, 150));
 
-      // 2. Swup 页面切换后（你的主题核心路由方式）
-      document.addEventListener('swup:contentReplaced', fixAnchorScroll);
-      
-      // 3. Astro ViewTransitions 兼容（双保险）
-      document.addEventListener('astro:after-swap', fixAnchorScroll);
+      // 场景2：Swup 页面切换后（解决点击页面内链接无效的核心）
+      document.addEventListener('swup:contentReplaced', () => setTimeout(smartScrollToHash, 150));
 
-      // 4. 点击页面内锚点链接时
+      // 场景3：Astro ViewTransitions
+      document.addEventListener('astro:after-swap', () => setTimeout(smartScrollToHash, 150));
+
+      // 场景4：监听点击事件（兜底方案，防止 Swup 事件没触发）
       document.addEventListener('click', (e) => {
         const anchor = e.target.closest('a');
+        // 确保是站内链接，且带有 Hash
         if (anchor && anchor.hash && anchor.origin === location.origin) {
-          // 延迟执行，等待 URL 更新和页面渲染
-          setTimeout(fixAnchorScroll, 50);
+          // 稍微延迟，等待 Swup 把新内容渲染完
+          setTimeout(smartScrollToHash, 200);
         }
       });
     </script>
