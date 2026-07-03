@@ -1,24 +1,38 @@
 ---
 const { title, keywords, description, pagecover, activeNav, Home } = Astro.props;
+// 网站配置
 import SITE_INFO from "@/config";
 const { GoogleAds, Theme, HomeBanner } = SITE_INFO;
 const { ad_Client, asideAD_Slot, articleAD_Slot } = GoogleAds;
+// Head 依赖
 import Head from "@/components/Head/Head.astro";
+// 顶部 Header
 import Header from "@/components/Header/Header.astro";
+// Main 区域 Header
 import MainHeader from "@/components/MainHeader/MainHeader.astro";
+// Aside组件
 import Aside from "@/components/Aside/Aside.astro";
+// 底部 Footer
 import Footer from "@/components/Footer/Footer.astro";
+// 返回顶部
 import BackTop from "@/components/BackTop/BackTop.astro";
+// 手机端侧边栏
 import MobileSidebar from "@/components/MobileSidebar/MobileSidebar.astro";
+// A Modern CSS Reset
 import "@/styles/Reset.less";
+// 全局基础样式
 import "@/styles/Base.less";
+// Layout 样式
 import "./Layout.less";
 ---
 
 <html lang="zh-CN">
   <Head Title={title} Keywords={keywords} Description={description} PageCover={pagecover}>
+    <!-- 谷歌广告JS加载项 -->
     {ad_Client && (asideAD_Slot || articleAD_Slot) && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ad_Client}`} crossorigin="anonymous" />}
+    <!-- 彩旗🎈 -->
     <script is:inline src="/assets/js/vhCaiqi.js" defer></script>
+    <!-- 设置主题颜色 & Header高度变量 -->
     <Fragment
       set:html={`<style>:root {${Object.entries(Theme)
         .map(([key, value]) => `${key}:${value};`)
@@ -39,62 +53,109 @@ import "./Layout.less";
       <BackTop />
     </main>
     <Footer />
+    
+    <!-- 原有全局初始化脚本，完全保留 -->
     <script>
       import InitFn from "@/scripts/Init";
+      // 全局初始化
       InitFn();
     </script>
 
-    <!-- ✅ 终极锚点修复：支持点击跳转 + 兼容评论区 -->
+    <!-- ✅ 完整锚点修复脚本：支持直接访问/点击跳转/评论高亮/防冲突 -->
     <script is:inline>
+      // 清除旧的高亮样式
+      function removeCommentHighlight() {
+        document.querySelectorAll('.tk-main').forEach(el => {
+          el.style.boxShadow = '';
+          el.style.borderRadius = '';
+          el.style.transition = '';
+        });
+      }
+
+      // 添加精准高亮（只框选单条评论内容，不包裹子评论）
+      function addCommentHighlight(target) {
+        if (!target) return;
+        // 精准定位到评论内容容器，而非外层父级
+        const mainEl = target.classList.contains('tk-main') ? target : target.querySelector('.tk-main');
+        if (mainEl) {
+          // 用主题色发光效果，比实线边框更柔和
+          mainEl.style.boxShadow = `0 0 0 2px var(--vh-main-color), 0 0 12px 2px var(--vh-main-color-38)`;
+          mainEl.style.borderRadius = '0.5rem';
+          mainEl.style.transition = 'box-shadow 0.3s ease-in-out';
+        }
+      }
+
+      // 核心滚动逻辑
       function smartScrollToHash() {
         const hash = window.location.hash;
-        if (!hash) return;
+        if (!hash) {
+          removeCommentHighlight();
+          return;
+        }
 
         const id = hash.replace('#', '');
         const target = document.getElementById(id);
         if (!target) return;
 
-        // 1. 判断是否是评论区的锚点（评论区自带高亮逻辑，我们这里只负责滚动，且不干扰它的定时器）
-        // 通常评论ID会包含 'comment' 或 'reply'
-        const isComment = id.includes('comment') || id.includes('reply');
-
+        // 读取主题动态计算的Header高度，适配首页/文章页不同场景
         const rootStyles = getComputedStyle(document.documentElement);
         const headerHeight = parseFloat(rootStyles.getPropertyValue('--vh-main-header-height')) || 80;
+        const isComment = id.includes('comment') || id.includes('reply');
 
         requestAnimationFrame(() => {
           if (isComment) {
-            // 2. 如果是评论，让它居中显示（配合 Comment.astro 里的脚本）
-            // 注意：Comment.astro 里的脚本已经有 setInterval 了，这里只做一次性的平滑滚动辅助
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 评论场景：居中显示+精准高亮
+            removeCommentHighlight();
+            addCommentHighlight(target);
+
+            const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
+            const targetHeight = target.offsetHeight;
+            const windowHeight = window.innerHeight;
+            
+            // 计算居中位置，同时确保不会滚到顶栏下方
+            let centerTop = targetTop - (windowHeight / 2) + (targetHeight / 2);
+            centerTop = Math.max(centerTop, headerHeight + 10);
+
+            window.scrollTo({
+              top: centerTop,
+              behavior: 'auto' // 用auto避免Swup动画覆盖滚动位置
+            });
           } else {
-            // 3. 如果是普通标题，顶部对齐，扣除 Header 高度
+            // 普通标题场景：顶部对齐，扣除顶栏高度
+            removeCommentHighlight();
             const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
             window.scrollTo({
-              top: targetTop - headerHeight - 12,
-              behavior: 'auto' // 站内跳转用 auto 最稳，不会被 Swup 覆盖
+              top: targetTop - headerHeight - 12, // 12px缓冲避免太贴顶
+              behavior: 'auto'
             });
           }
         });
       }
 
-      // 场景1：首次加载页面（例如直接访问 xxx.com/#标题）
-      document.addEventListener('DOMContentLoaded', () => setTimeout(smartScrollToHash, 150));
+      // 场景1：首次加载页面（直接访问带锚点的链接）
+      document.addEventListener('DOMContentLoaded', () => setTimeout(smartScrollToHash, 200));
 
-      // 场景2：Swup 页面切换后（解决点击页面内链接无效的核心）
-      document.addEventListener('swup:contentReplaced', () => setTimeout(smartScrollToHash, 150));
+      // 场景2：Swup页面切换后（解决站内跳转锚点失效问题）
+      document.addEventListener('swup:contentReplaced', () => setTimeout(smartScrollToHash, 200));
 
-      // 场景3：Astro ViewTransitions
-      document.addEventListener('astro:after-swap', () => setTimeout(smartScrollToHash, 150));
+      // 场景3：Astro视图过渡后兼容
+      document.addEventListener('astro:after-swap', () => setTimeout(smartScrollToHash, 200));
 
-      // 场景4：监听点击事件（兜底方案，防止 Swup 事件没触发）
+      // 场景4：拦截所有锚点点击（解决点击评论头像无效果问题）
       document.addEventListener('click', (e) => {
         const anchor = e.target.closest('a');
-        // 确保是站内链接，且带有 Hash
         if (anchor && anchor.hash && anchor.origin === location.origin) {
-          // 稍微延迟，等待 Swup 把新内容渲染完
-          setTimeout(smartScrollToHash, 200);
+          // 评论相关链接手动接管，避免Twikoo默认行为冲突
+          if (anchor.hash.includes('comment') || anchor.hash.includes('reply')) {
+            e.preventDefault();
+            window.location.hash = anchor.hash;
+          }
+          setTimeout(smartScrollToHash, 100);
         }
       });
+
+      // 场景5：URL哈希变化时触发（最稳定的兜底方案）
+      window.addEventListener('hashchange', () => setTimeout(smartScrollToHash, 100));
     </script>
   </body>
 </html>
