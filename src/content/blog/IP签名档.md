@@ -133,4 +133,6 @@ $by_text = "欢迎来到 你的博客名";
 
 里面有完整的 PHP 代码 + 图片素材。Key 改好就能直接部署。
 
-有什么问题留言问。::btn[演示地址]{link="http://ip.xiaoh.cc.cd:47903" type="import"}
+有什么问题留言问。
+
+::btn[演示地址]{link="http://ip.xiaoh.cc.cd:47903" type="import"}
