@@ -14,9 +14,9 @@ recommend: true
 
 效果大概长这样：
 
-![IP签名档预览](http://ip.xiaoh.cc.cd:47903/)
+![IP签名档预览](https://img.tucang.cc/api/image/show/1aecc5027768dedea6a570e336201eb2)
 :::note{type=info}
-这是美化版的，正常版的预览
+上面这是美化版的，下面是正常版的预览
 ![IP签名档](https://img.tucang.cc/api/image/show/aa4f1208dd0daa96e07848399122dcf2)
 :::
 部署不算复杂，前后半小时搞定。
