@@ -17,7 +17,7 @@ type: "links"
 ```yaml
 name: 笑的博客
 link: https://www.xiaow.qzz.io
-avatar: https://xiaow.qzz.io/wj/avatar.png
+avatar: https://xiaow.qzz.io/wj/avatar.jpg
 descr: 随性收拢生活散落的笑意，与同路人漫谈成长微澜。
 rss: https://blog.xiaow.qzz.io/rss.xml
 ```
