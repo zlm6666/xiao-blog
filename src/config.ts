@@ -10,7 +10,7 @@ export default {
   // 网站作者
   Author: '𝒙𝒊𝒂𝒐',
   // 作者头像
-  Avatar: 'https://wp-cdn.4ce.cn/v2/TVFIv5x.jpeg',
+  Avatar: 'https://img.tucang.cc/api/image/show/1a807dec268adc040155674c9798fcd4',
   // 网站座右铭
   Motto: '懒于空想，勤于笔耕；若有所感，方落字成章',
   // Cover 网站缩略图
