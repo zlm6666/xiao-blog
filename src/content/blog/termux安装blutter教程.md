@@ -8,7 +8,7 @@ tags:
   - 教程
 id: termux-install-blutter
 date: 2026-3-21 15:50:12
-cover: "https://img.tucang.cc/api/image/show/2859f26f38a901982ed62ccf25c55e96"
+cover: "https://img.tucang.cc/api/image/show/bf6c3bd48d929d4c69188cdc19657fd6"
 recommend: true
 ---
 ## 前言
