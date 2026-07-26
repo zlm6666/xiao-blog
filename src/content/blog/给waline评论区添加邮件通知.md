@@ -7,7 +7,7 @@ tags:
   - 博客
 id: waline-mail-push
 date: 2025-12-27 11:37:45
-cover: "http://img.magicalapp.cn/api/image/show/520a1a46d6c696428a00b68d437a7d1f"
+cover: "https://img.tucang.cc/api/image/show/0d2a9784694d76f64de0a67c6cb89e74"
 recommend: true
 ---
 ## 前言
