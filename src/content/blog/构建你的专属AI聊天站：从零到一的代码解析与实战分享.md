@@ -5,7 +5,7 @@ tags:
   - AI
 id: ai-chat-free
 date: 2026-01-31 19:40:22
-cover: "http://img.tucang.cc/api/image/show/8072a2fe5441ecfa9acf43aa598f0183"
+cover: "https://img.tucang.cc/api/image/show/5e439ec30f8e2dabd4f6abc764e3b1fc"
 recommend: true
 ---
 ## 引言
