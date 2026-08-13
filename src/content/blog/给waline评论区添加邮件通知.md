@@ -126,7 +126,7 @@ module.exports = Application({
 
 **预览**
 :::picture
-![新评论](https://wp-cdn.4ce.cn/v2/WJ8e4kv.jpeg)
-![回复评论](https://wp-cdn.4ce.cn/v2/kuQXuAk.jpeg)
+![新评论](https://img.xiaow.qzz.io/v2/WJ8e4kv.jpeg)
+![回复评论](https://img.xiaow.qzz.io/v2/kuQXuAk.jpeg)
 :::
 还是非常不错的，要注意邮箱有发现频率限制，过于频繁可能会被禁言！
