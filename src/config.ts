@@ -95,7 +95,7 @@ export default {
     'https://waline.xiaow.qzz.io',
     'https://img1.tucang.cc',
     'https://blog.xiaow.qzz.io',
-    'http://ip.xiaoh.cc.cd'
+    'http://img.xiaow.qzz.io'
   ],
   // 博客音乐组件解析接口
   vhMusicApi: 'https://vh-api.4ce.cn/blog/meting',
