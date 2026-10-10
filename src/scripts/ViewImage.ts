@@ -14,39 +14,30 @@ const ViewImgList: string[] = [
 ];
 
 /* ==================== 滚动锁定（防穿透） ==================== */
+// 轻量锁定：只隐藏溢出，不改滚动位置、不用 position:fixed。
+// 否则解锁时页面会先被顶回顶部、再被平滑滚动库慢慢滑回原处（Via / WebView 上尤其明显）。
 let scrollLocked = false;
-let savedScrollY = 0;
 
 const lockScroll = () => {
   if (scrollLocked) return;
   scrollLocked = true;
-  savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-  const b = document.body;
-  b.style.position = "fixed";
-  b.style.top = `-${savedScrollY}px`;
-  b.style.left = "0";
-  b.style.right = "0";
-  b.style.width = "100%";
-  b.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
 };
 
 const unlockScroll = () => {
   if (!scrollLocked) return;
   scrollLocked = false;
-  const b = document.body;
-  b.style.position = "";
-  b.style.top = "";
-  b.style.left = "";
-  b.style.right = "";
-  b.style.width = "";
-  b.style.overflow = "";
-  window.scrollTo(0, savedScrollY);
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
 };
 
 /* ==================== 手势缩放 ==================== */
 const enhanceOverlay = (overlay: HTMLElement) => {
   // 裁剪放大后溢出屏幕的部分
   overlay.style.overflow = "hidden";
+  // 屏蔽浏览器默认触摸滚动/缩放（缩放由下方手势自行处理），进一步杜绝滑动穿透
+  overlay.style.touchAction = "none";
 
   let scale = 1;
   let tx = 0;
